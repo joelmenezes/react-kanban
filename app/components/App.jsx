@@ -1,72 +1,66 @@
 import React from 'react';
 import uuid from 'uuid';
+import {compose} from 'redux';
+import {DragDropContext} from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
 
 import Notes from './Notes';
+import Lanes from './Lanes';
+
 import connect from '../libs/connect';
+import NoteActions from '../actions/NoteActions';
+import LaneActions from '../actions/LaneActions';
 
-class App extends React.Component {
-	constructor(props) {
-		super(props);
+const App = ({LaneActions, lanes}) => {
+  const addLane = () => {
+    LaneActions.create({
+      id: uuid.v4(),
+      name: 'New lane'
+    });
+  };
 
-		this.state = {
-			notes : [
-				{
-					id: uuid.v4(),
-					task: 'First Task'
-				},
-				{
-					id: uuid.v4(),
-					task: 'Second task'
-				}
-			]
-		};
-	}
+  return (
+    <div>
+      <button className="add-lane" onClick={addLane}>+</button>
+      <Lanes lanes={lanes} />
+    </div>
+  );
+};
+
+export default compose(
+	DragDropContext(HTML5Backend),
+	connect(
+		({lanes}) => ({lanes}), 
+		{LaneActions}
+	)
+)(App)
+
+/*class App extends React.Component {
 
 	activateNoteEdit = (id) => {
-		this.setState ({
-			notes: this.state.notes.map(note => {
-				if(note.id == id) {
-					note.editing = true;
-				}
-				return note;
-			})
-		});
+		this.props.NoteActions.update({id, editing: true});
 	}
 
 	addNote = () => {
-		this.setState({
-			notes: this.state.notes.concat([{
-				id: uuid.v4(),
-				task: 'New Task'
-			}])
+		this.props.NoteActions.create({
+			id: uuid.v4(),
+			task: 'New Task'
 		});
 	}
 
 	deleteNote = (id, e) => {
 		e.stopPropagation();
-		this.setState({
-			notes: this.state.notes.filter(note => note.id != id)
-		});
+		this.props.NoteActions.delete(id);
 	}
 
 	editNote = (id, task) => {
-		this.setState({
-			notes: this.state.notes.map(note => {
-				if (note.id == id) {
-					note.editing = false;
-					note.task = task;
-				}
-				return note;
-			})
-		});
+		this.props.NoteActions.update({id, task, editing: false});
 	}
 
 	render() {
-		const {notes} = this.state;
-
+		const {notes} = this.props;
 		return (
 			<div>
-				{this.props.test}
 				<button className="add-note" onClick={this.addNote}>+</button>
 				<Notes 
 					notes={notes} 
@@ -79,6 +73,8 @@ class App extends React.Component {
 	}
 }
 
-export default connect(() => ({
-	test: 'test'
-}))(App)
+export default connect(({notes}) => ({
+	notes
+}), {
+	NoteActions
+})(App)*/
