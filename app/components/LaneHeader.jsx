@@ -58,7 +58,7 @@ export default connect(() => ({}), {
 				value={lane.name} onEdit={editName} />
 
 			<div className="lane-delete">
-				<button onClick={deleteLane}>x</button>
+				<button onClick={deleteLane}>X</button>
 			</div>
 		</div>
 	);

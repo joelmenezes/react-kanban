@@ -3,12 +3,27 @@ import update from 'react-addons-update';
 
 
 import LaneActions from '../actions/LaneActions';
-
+const defaultLanes = [
+	{
+		id: uuid.v4(),
+		name: 'To Do',
+		notes: []
+	},
+	{
+		id: uuid.v4(),
+		name: 'Doing',
+		notes: []
+	},
+	{
+		id: uuid.v4(),
+		name: 'Done',
+		notes: []
+	}
+];
 export default class LaneStore {
 	constructor() {
 		this.bindActions(LaneActions);
-
-		this.lanes = [];
+		this.lanes = defaultLanes;
 	}
 
 	create(lane) {
